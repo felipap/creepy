@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 
-import { Chat } from '@/db/schema';
 import * as Sentry from '@sentry/nextjs';
 import chalk from 'chalk';
 import safeStringify from 'json-stringify-safe';
@@ -36,10 +35,6 @@ export function genericLog(severity: Severity, message: string, args?: any) {
 
 export function log(message: string, args?: any) {
 	genericLog('log', message, args);
-}
-
-export function logErrorForChat(chat: Chat, message: string, context?: any) {
-	genericLog('error', message, { context, chatId: chat.id });
 }
 
 export function error(message: string, context?: any) {

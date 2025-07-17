@@ -4,4 +4,7 @@
 
 - [ ] Document how to configure for self use.
 - [ ] Support custom locations.
-- [ ] Pull data from Felipe's phone.
+- [ ] Auth between web and mobile.
+- [ ] See locations on the map.
+- [ ] Get rid of Clerk.
+- [x] Pull data from Felipe's phone.

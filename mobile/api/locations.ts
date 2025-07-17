@@ -31,6 +31,7 @@ export type Location = {
 	id: string;
 	latitude: string;
 	longitude: string;
+	9;
 	accuracy?: number;
 	timestamp: number;
 	source: 'button' | 'background' | 'foreground';

@@ -2,14 +2,14 @@ import { getClerkToken } from '@/lib/auth';
 import { debug } from '@/lib/logger';
 import { LogBox } from 'react-native';
 
-const SERVER_URL = process.env.EXPO_PUBLIC_SERVER_URL || '';
-if (!SERVER_URL) {
-	throw new Error('Missing SERVER_URL');
+const EXPO_PUBLIC_SERVER_URL = process.env.EXPO_PUBLIC_SERVER_URL || '';
+if (!EXPO_PUBLIC_SERVER_URL) {
+	throw new Error('Missing EXPO_PUBLIC_SERVER_URL');
 }
 
 export const API_HOST = __DEV__
 	? 'https://cc7f-2600-1700-460-3430-c168-febd-ebad-e04.ngrok-free.app'
-	: SERVER_URL; // Endpoint for location data
+	: EXPO_PUBLIC_SERVER_URL; // Endpoint for location data
 
 // log('API_HOST', API_HOST);
 

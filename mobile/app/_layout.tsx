@@ -1,7 +1,6 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
-import { NotificationsProvider } from '@/components/NotificationsProvider';
 import { DarkTheme, Theme, ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
@@ -64,11 +63,9 @@ export default function RootLayout() {
 						value={colorScheme === 'dark' ? DarkTheme : LightTheme}
 					>
 						<TrackerProvider>
-							<NotificationsProvider>
-								<StatusBar style="auto" />
-								<Slot />
-								{/* <Toast /> */}
-							</NotificationsProvider>
+							<StatusBar style="auto" />
+							<Slot />
+							{/* <Toast /> */}
 						</TrackerProvider>
 					</ThemeProvider>
 				</QueryClientProvider>

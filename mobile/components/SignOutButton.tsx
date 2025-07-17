@@ -1,15 +1,15 @@
-import { useClerk } from '@clerk/clerk-expo';
+// import { useClerk } from '@clerk/clerk-expo';
 import * as Linking from 'expo-linking';
 import { StyleSheet } from 'react-native';
 import { Button } from './ui';
 
 export const SignOutButton = () => {
 	// Use `useClerk()` to access the `signOut()` function
-	const { signOut } = useClerk();
+	// const { signOut } = useClerk();
 
 	const handleSignOut = async () => {
 		try {
-			await signOut();
+			// await signOut();
 			// Redirect to your desired page
 			Linking.openURL(Linking.createURL('/'));
 		} catch (err) {

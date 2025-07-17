@@ -1,4 +1,4 @@
-import { getClerkToken } from '@/lib/clerk';
+import { getClerkToken } from '@/lib/auth';
 import { debug, error, log, logError, warn } from '@/lib/logger';
 import { mainStore } from '@/state/store';
 import * as BackgroundFetch from 'expo-background-fetch';

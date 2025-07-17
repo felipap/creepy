@@ -8,8 +8,8 @@ export const FELIPE_PLACES = [
 		label: 'home',
 		radiusMeter: 20,
 		coords: {
-			latitude: Number(process.env.FELIPE_LATITUDE),
-			longitude: Number(process.env.FELIPE_LONGITUDE),
+			latitude: Number(process.env.EXPO_PUBLIC_FELIPE_LATITUDE),
+			longitude: Number(process.env.EXPO_PUBLIC_FELIPE_LONGITUDE),
 		},
 	},
 	{

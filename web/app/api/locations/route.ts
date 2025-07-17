@@ -57,6 +57,11 @@ export async function POST(request: Request) {
 	}
 
 	await db.insert(Locations).values({
+		userId: user.id,
+		latitude: location.data.latitude,
+		longitude: location.data.longitude,
+		source: location.data.source,
+	});
 
 	return new Response(
 		JSON.stringify({

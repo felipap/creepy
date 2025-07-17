@@ -1,3 +1,4 @@
+import { createId } from '@paralleldrive/cuid2';
 import { InferSelectModel } from 'drizzle-orm';
 import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
@@ -24,7 +25,9 @@ export const Places = pgTable('places', {
 export type Place = InferSelectModel<typeof Places>;
 
 export const Locations = pgTable('locations', {
-	id: serial('id').primaryKey(),
+	id: text('id')
+		.primaryKey()
+		.$defaultFn(() => createId()),
 	timestamp: timestamp('created_at').defaultNow().notNull(),
 	userId: integer('user_id')
 		.notNull()

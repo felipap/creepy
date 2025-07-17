@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { User } from '@/db/schema';
-import { clerkClient } from '@clerk/nextjs/server';
 import assert from 'assert';
 import jsonwebtoken from 'jsonwebtoken';
 import { cache } from 'react';
@@ -11,8 +10,6 @@ export const JWT_SECRET = process.env.JWT_SECRET || '';
 if (!JWT_SECRET) {
 	throw new Error('JWT_SECRET is not set');
 }
-
-export { clerkClient };
 
 export const getUser = cache(async (): Promise<User> => {
 	return { id: 1 };

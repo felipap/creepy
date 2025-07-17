@@ -1,26 +1,104 @@
-@import "tailwindcss";
+/* https://tailwindcss.com/blog/tailwindcss-v4#css-first-configuration */
+
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* https://tailwindcss.com/docs/dark-mode */
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+/* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	color-scheme: light dark;
+
+	/* Fonts */
+	--font-display: 'SF Pro Display', ui-sans-serif, system-ui, sans-serif,
+		'Apple Color Emoji', 'Noto Color Emoji';
+	--font-sans: 'SF Pro', ui-sans-serif, system-ui, sans-serif,
+		'Apple Color Emoji', 'Noto Color Emoji';
+	--font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+		'Liberation Mono', 'Courier New', monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+	/* Colors */
+	--text-color-contrast: #000;
+	--text-color-primary: #000;
+	--text-color-secondary: #888;
+	--text-color-tertiary: #aaa;
+	--text-color-inverted: #fff;
+	--background-one: #f0f0f0;
+	--background-two: #f0f0f0;
+	--background-three: #fff;
+	--highlight-color: #3b82f6;
+	--twitter-blue: #1da1f2;
+	--text-color-link: #007aff;
+
+	/*  */
+	--color-nav: #f0f0f0;
+	--color-background: #eee;
+	--color-tab-active: #eaeaeb;
+	--border-color-one: #dadada;
+	--border-color-two: #dadada;
+	--color-btn: #fff;
+	--color-input: #fff;
+	--color-tertiary: #f0f0f0;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	:root {
+		--text-color-contrast: #fff;
+		--text-color-primary: #fff;
+		--text-color-link: #6fb4ff;
+		--text-color-secondary: #aaa;
+		--text-color-tertiary: #666;
+		--text-color-inverted: #000;
+		--background-one: #111;
+		--background-two: #2a2a2a;
+		--background-three: #101010;
+	}
+}
+
+@layer base {
+	*,
+	::before,
+	::after {
+		@apply dark:border-[#1e1c1e] border-[#ddd];
+	}
+}
+
+.link {
+	color: var(--text-color-link);
+}
+
+/* Layout */
+
+.column-width {
+	/* max-width: var(--column-width); */
+	padding-left: 20px;
+	padding-right: 30px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	/* background-color: red; */
+	color: var(--text-color-primary);
+}
+
+button {
+	cursor: pointer;
+}
+
+textarea {
+	@apply border-inherit;
+}
+
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+	/* https://github.com/tailwindlabs/tailwindcss/discussions/14508 */
 }

@@ -15,7 +15,6 @@ export type User = {
 	imageUrl: string;
 	chatId: string | null;
 	notificationsEnabled: boolean;
-	pushToken: string | null;
 };
 
 export type State = {
@@ -29,9 +28,7 @@ export type State = {
 export type Action = {
 	setLastSeenHistoryTabAt: (lastSeenHistoryTabAt: string | null) => void;
 	setIsTracking: (isTracking: boolean) => void;
-	updateNotificationSettings: (notificationsEnabled: boolean) => Promise<void>;
 	addLocation: (location: UserLocation) => void;
 	removeLocation: (id: string) => void;
 	setUser: (user: User | null) => void;
-	updatePushToken: (pushToken: string | null) => Promise<void>;
 };

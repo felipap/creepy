@@ -1,5 +1,5 @@
-import { getSelf, updateNotificationSettings } from '@/api';
-import { debug, logError } from '@/lib/logger';
+import { getSelf } from '@/api';
+import { fetchAPI } from '@/api/utils';
 import { useQuery } from '@tanstack/react-query';
 import { createContext, useContext, useEffect } from 'react';
 import { MMKV } from 'react-native-mmkv';
@@ -18,6 +18,28 @@ const DEFAULT_STATE: State = {
 	lastSeenHistoryTabAt: null,
 	lastLocationAt: null,
 };
+
+async function sendLocationsToServer(locations: UserLocation[]) {
+	const response = await fetchAPI('api/locations', {
+		method: 'POST',
+		body: JSON.stringify(locations),
+	}).catch((err) => {
+		console.error('Failed to send locations to server', err);
+	});
+
+	if (response?.error) {
+		console.error('Failed to send locations to server', response.error);
+	}
+}
+
+async function main() {
+	console.log('main. will send locations.');
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+	const locations = mainStore.getState().locations;
+	await sendLocationsToServer(locations);
+}
+
+void main();
 
 //
 
@@ -41,85 +63,6 @@ export const mainStore = createStore<State & Action>()(
 				set((state) => ({
 					locations: state.locations.filter((location) => location.id !== id),
 				}));
-			},
-			updateNotificationSettings: async (notificationsEnabled: boolean) => {
-				// Store the previous state for rollback
-				const previousState = mainStore.getState().user;
-
-				// Optimistically update the state
-				set((state) => ({
-					user: state.user
-						? {
-								...state.user,
-								notificationsEnabled,
-						  }
-						: null,
-				}));
-
-				try {
-					const updatedUser = await updateNotificationSettings(
-						notificationsEnabled,
-						null // FIXME
-					);
-					// Update with server response
-					set((state) => ({
-						user: state.user
-							? {
-									...state.user,
-									...updatedUser,
-									notificationsEnabled,
-							  }
-							: null,
-					}));
-				} catch (error) {
-					// Revert to previous state on error
-					set({ user: previousState });
-					throw new Error(
-						error instanceof Error
-							? error.message
-							: 'Failed to update notification settings'
-					);
-				}
-			},
-			updatePushToken: async (pushToken: string | null) => {
-				// Store the previous state for rollback
-				const previousState = mainStore.getState().user;
-
-				// Optimistically update the state
-				set((state) => ({
-					user: state.user
-						? {
-								...state.user,
-								pushToken,
-						  }
-						: null,
-				}));
-
-				debug('[UserState] will updatePushToken', { pushToken });
-
-				try {
-					const updatedUser = await updateNotificationSettings(
-						previousState?.notificationsEnabled ?? false,
-						pushToken
-					);
-					// Update with server response
-					set((state) => ({
-						user: state.user
-							? {
-									...state.user,
-									...updatedUser,
-									pushToken,
-							  }
-							: null,
-					}));
-				} catch (err) {
-					logError('[UserState] Failed to updatePushToken', err);
-					// Revert to previous state on error
-					set({ user: previousState });
-					throw new Error(
-						err instanceof Error ? err.message : 'Failed to update push token'
-					);
-				}
 			},
 		}),
 		{

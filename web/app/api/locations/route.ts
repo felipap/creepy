@@ -1,10 +1,10 @@
 import { db } from '@/db';
 import { Locations } from '@/db/schema';
-import { getLocationLabel } from '@/lib/location-labels';
 import { desc, eq } from 'drizzle-orm';
+import fs from 'fs';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { getMobileUser, getUser } from '../../../lib/session';
+import { getUser } from '../../../lib/session';
 
 const MIN_INTERVAL = 1000 * 5;
 
@@ -46,52 +46,22 @@ const Struct = z.object({
 });
 
 export async function POST(request: Request) {
-	const user = await getMobileUser(request);
-	const body = await request.json();
+	console.log('POST /locations');
 
-	if (process.env.NODE_ENV === 'development') {
-		// Play a sound when a location is sent in development
-		// eslint-disable-next-line @typescript-eslint/no-require-imports
-		require('child_process').exec(
-			'afplay /System/Library/Sounds/Pop.aiff -v 10'
-		);
-	}
+	const json = await request.json();
 
-	let parsed;
-	try {
-		parsed = Struct.parse(body);
-	} catch (error: any) {
-		return new Response(JSON.stringify({ error: error.message }), {
-			status: 400,
-		});
-	}
+	console.log('got json');
 
-	const label = getLocationLabel({
-		latitude: parsed.latitude,
-		longitude: parsed.longitude,
-	});
+	fs.writeFileSync(
+		'/Users/felipe/locations.json',
+		JSON.stringify(json, null, 2)
+	);
 
-	console.log('Felipe is at', label);
+	console.log('what!?');
 
-	const latest = await getLatestLocationTimestamp(user.id);
-	if (latest && latest.getTime() > Date.now() - MIN_INTERVAL) {
-		console.log('Last location was sent too recently.');
-		return new Response(JSON.stringify({ error: 'Too frequent' }), {
-			status: 429,
-		});
-	}
-
-	const location = await db
-		.insert(Locations)
-		.values({
-			userId: user.id,
-			timestamp: new Date(),
-			latitude: '' + parsed.latitude,
-			longitude: '' + parsed.longitude,
-			source: parsed.source,
-			placeLabel: label,
+	return new Response(
+		JSON.stringify({
+			message: 'Hello, world!',
 		})
-		.returning();
-
-	return new Response(JSON.stringify(location));
+	);
 }

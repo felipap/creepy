@@ -12,7 +12,7 @@ export default async function Page() {
 
   return (
     <main className="flex-1 h-full">
-      <header className="flex justify-between items-center p-3 py-4 bg-amber-100 dark:bg-amber-900">
+      <header className="flex justify-between items-center p-3 py-4 bg-amber-300 dark:bg-amber-900">
         <div className="flex flex-col gap-2">
           <Link href="/" className="text-sm hover:underline">
             &larr; See timeline

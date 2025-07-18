@@ -79,7 +79,7 @@ export const LocationMap = withBoundary(({ locations }: Props) => {
   }, [latestLocation])
 
   const filteredLocations = useMemo(() => {
-    return locations
+    return locations.filter(() => Math.random() < 0.1)
     // .filter(location => {
     //   return dayjs(location.timestamp).isSame(selectedDate, 'day')
     // })

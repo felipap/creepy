@@ -27,14 +27,12 @@ export const GET = authMobileRequest(async (request: NextRequest) => {
   )
 })
 
-export const CreateLocationStruct = z.object({
+const PostStruct = z.object({
   uniqueId: z.string(),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
   source: z.string(),
 })
-
-const PostStruct = CreateLocationStruct
 
 export const POST = authMobileRequest(async (request: NextRequest) => {
   console.log('POST /locations')

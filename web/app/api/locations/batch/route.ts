@@ -3,11 +3,17 @@ import { db } from '@/db'
 import { DEFAULT_USER_ID, Locations } from '@/db/schema'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
-import { CreateLocationStruct } from '../route'
 
 const PostStruct = z.object({
   locations: z
-    .array(CreateLocationStruct)
+    .array(
+      z.object({
+        uniqueId: z.string(),
+        latitude: z.number().min(-90).max(90),
+        longitude: z.number().min(-180).max(180),
+        source: z.string(),
+      }),
+    )
     .max(50, 'Exceeded max locations = 50'),
 })
 

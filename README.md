@@ -2,9 +2,7 @@
 
 # creepy
 
-A location tracking app for you and your AI.
-
-Track your location using your phone and make it available to AI via an MCP server.
+An iOS app that tracks your location and an MCP server that exposes it to your AI.
 
 ## Demo
 
@@ -12,7 +10,7 @@ Track your location using your phone and make it available to AI via an MCP serv
 
 <img width="300" height="1705" alt="image" src="https://github.com/user-attachments/assets/945854e0-1c1a-4678-aeac-fb013c30e43b" />
 
-## Overview
+## Structure
 
 This project has two components:
 

@@ -5,20 +5,12 @@ export type UserLocation = {
 	longitude: number;
 	source: 'background' | 'button' | 'foreground' | null;
 	label: string | null;
-};
-
-export type User = {
-	id: string;
-	email: string;
-	firstName: string;
-	lastName: string;
-	imageUrl: string;
-	chatId: string | null;
-	notificationsEnabled: boolean;
+	// When set, the location was synced to the server.
+	remoteId?: string | null;
+	remoteSyncedAt?: string | null;
 };
 
 export type State = {
-	user: User | null;
 	locations: UserLocation[];
 	isTracking: boolean;
 	lastSeenHistoryTabAt: string | null;
@@ -30,5 +22,5 @@ export type Action = {
 	setIsTracking: (isTracking: boolean) => void;
 	addLocation: (location: UserLocation) => void;
 	removeLocation: (id: string) => void;
-	setUser: (user: User | null) => void;
+	setLocationsRemoteIds: (args: { id: string; remoteId: string }[]) => void;
 };

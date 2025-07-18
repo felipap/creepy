@@ -1,10 +1,31 @@
 import { LocationHistoryList } from '@/components/LocationHistoryList';
+import { Button } from '@/components/ui';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import { syncAllLocations } from '@/state/sync';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function SyncButton() {
+	const [state, setState] = useState<'idle' | 'loading' | 'success' | 'error'>(
+		'idle'
+	);
+
+	function onPressSync() {
+		console.log('onPressSync');
+		syncAllLocations();
+	}
+
+	return (
+		<View>
+			<ThemedText>{state}</ThemedText>
+			<Button onPress={onPressSync}>Sync Locations</Button>
+		</View>
+	);
+}
 
 function BackButton() {
 	return (
@@ -26,6 +47,9 @@ export default function Screen() {
 				<BackButton />
 				<ThemedText type="title">Location History</ThemedText>
 			</ThemedView>
+
+			<SyncButton />
+
 			<ScrollView style={styles.scrollView}>
 				<LocationHistoryList />
 			</ScrollView>

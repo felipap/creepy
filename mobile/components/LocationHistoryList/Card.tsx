@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
@@ -18,9 +18,15 @@ export const LocationCard = withBoundary(
 		const { removeLocation } = useMainStore();
 
 		return (
+			<View>
+				<ThemedText type="defaultSemiBold">
+					{location.id}: {formatDate(new Date(location.timestamp))}
+				</ThemedText>
+			</View>
+		);
+
+		return (
 			<ThemedView style={[styles.container, firstSeen && styles.firstSeen]}>
-				{' '}
-				``
 				<TouchableOpacity
 					onPress={() => removeLocation(location.id)}
 					style={styles.removeButton}
@@ -81,48 +87,3 @@ function formatDate(date: Date) {
 		minute: '2-digit',
 	});
 }
-
-const styles = StyleSheet.create({
-	container: {
-		position: 'relative',
-		paddingHorizontal: 10,
-		paddingVertical: 10,
-		marginBottom: 12,
-		borderRadius: 12,
-		elevation: 2,
-		borderWidth: 1,
-		borderColor: '#000',
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-	},
-	header: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginBottom: 0,
-	},
-	cardContent: {
-		gap: 2,
-	},
-	coordinateRow: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	firstSeen: {
-		borderColor: 'blue',
-		borderWidth: 2,
-	},
-	removeButton: {
-		position: 'absolute',
-		right: 0,
-		top: 0,
-		bottom: 0,
-		paddingHorizontal: 4,
-		paddingVertical: 8,
-		paddingLeft: 12,
-		paddingRight: 12,
-		justifyContent: 'center',
-	},
-});

@@ -54,6 +54,8 @@ export const Locations = pgTable(
       .$defaultFn(() => createId()),
     // A unique ID on the app side. Used for deduplication. FIXME rename
     uniqueId: text('unique_id').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    uselessField: text('useless_field'),
     timestamp: timestamp('timestamp').defaultNow().notNull(),
     userId: integer('user_id')
       .notNull()

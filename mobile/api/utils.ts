@@ -29,10 +29,15 @@ LogBox.ignoreAllLogs();
 export async function fetchAPI(
 	path: string,
 	options?: RequestInit
-): Promise<{
-	error?: string;
-	data?: any;
-}> {
+): Promise<
+	| {
+			error: string;
+			message?: string;
+	  }
+	| {
+			data: any;
+	  }
+> {
 	const token = await getClerkToken();
 	if (!token) {
 		return {

@@ -65,7 +65,12 @@ export const POST = authMobileRequest(async (request: NextRequest) => {
       source: parsed.data.source,
     })
     .returning()
-    .onConflictDoNothing()
+    // We need to update in order to get the objects back, because the caller
+    // will need their IDs to consider them synced.
+    .onConflictDoUpdate({
+      target: [Locations.uniqueId, Locations.userId],
+      set: {},
+    })
 
   if (!loc) {
     console.log(`Location ${parsed.data.uniqueId} already exists, skipping.`)

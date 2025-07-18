@@ -1,7 +1,8 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
+    // This leads to very annoying deletion of unreachable code on save.
+    // "source.fixAll": "explicit",
   }
 }

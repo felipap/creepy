@@ -25,9 +25,11 @@ export const LocationHistoryList = withBoundary(() => {
 
 	function handleLoadMore() {}
 
-	const sortedLocations = locations.sort((a, b) => {
-		return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-	});
+	const sortedLocations = locations
+		.sort((a, b) => {
+			return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+		})
+		.slice(0, 10);
 
 	if (locations.length === 0 && !loading) {
 		return (

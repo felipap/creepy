@@ -41,6 +41,7 @@
 		"expo-web-browser": "~14.1.6",
 		"lucide-react": "^0.507.0",
 		"lucide-react-native": "^0.507.0",
+		"prettier": "^3.6.2",
 		"react": "19.0.0",
 		"react-dom": "19.0.0",
 		"react-error-boundary": "^6.0.0",

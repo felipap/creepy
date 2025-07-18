@@ -5,38 +5,61 @@ import { z } from 'zod'
 import { authMobileRequest, CreateLocationStruct } from '../route'
 
 const PostStruct = z.object({
-  locations: z.array(CreateLocationStruct),
+  locations: z
+    .array(CreateLocationStruct)
+    .max(50, 'Exceeded max locations = 50'),
 })
 
 /**
- * Only the new locations are returned.
+ * Old locations are returned too, only because the mobile app needs to get
+ * their IDs.
  */
 export const POST = authMobileRequest(async (request: NextRequest) => {
+  console.log('POST /locations/batch')
+
   const json = await request.json()
 
   const parsed = PostStruct.safeParse(json)
   if (!parsed.success) {
+    console.debug('Invalid request body', {
+      json,
+      error: parsed.error,
+    })
     return Response.json({ error: parsed.error }, { status: 400 })
   }
 
-  const locations = parsed.data.locations
-
-  console.log('POST /locations/batch', locations)
+  const createdAt = new Date()
 
   const dbLocations = await db
     .insert(Locations)
     .values(
-      locations.map(l => ({
-        ...l,
+      parsed.data.locations.map(l => ({
+        uniqueId: l.uniqueId,
         userId: DEFAULT_USER_ID,
+        createdAt,
         latitude: l.latitude.toString(),
         longitude: l.longitude.toString(),
+        source: l.source,
       })),
     )
-    .onConflictDoNothing()
+    .onConflictDoUpdate({
+      target: [Locations.uniqueId, Locations.userId],
+      set: {
+        // We need to update in order to get the already-existing locations
+        // back, but we can't have an empty update. So we just set this,
+        // whatever.
+        uselessField: 'whatever',
+      },
+    })
     .returning()
 
-  // QUESTION what happens if a subset conflicts??
+  const countNewEntries = dbLocations.filter(
+    l => l.createdAt === createdAt,
+  ).length
+
+  console.log(
+    `Created ${countNewEntries}/${parsed.data.locations.length} new entries`,
+  )
 
   return Response.json({ locations: dbLocations })
 })

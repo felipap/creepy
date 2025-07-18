@@ -1,0 +1,10 @@
+POST http://localhost:3000/api/locations
+Content-Type: application/json
+X-Tracker-Password: {{$dotenv PASSWORD}}
+
+{
+  "uniqueId": "123",
+  "latitude": 74.23423,
+  "longitude": 74.23423,
+  "source": "yo-mama"
+}

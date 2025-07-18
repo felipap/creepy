@@ -63,6 +63,7 @@ export async function fetchAPI(
 
 	if (!res.ok) {
 		if (
+			res.status === 409 ||
 			res.status === 500 ||
 			res.status === 501 ||
 			res.status === 502 ||

@@ -18,7 +18,9 @@ export const LocationCard = withBoundary(
 		const { removeLocation } = useMainStore();
 
 		return (
-			<ThemedView style={[styles.container, firstSeen && styles.firstSeen]}> ``
+			<ThemedView style={[styles.container, firstSeen && styles.firstSeen]}>
+				{' '}
+				``
 				<TouchableOpacity
 					onPress={() => removeLocation(location.id)}
 					style={styles.removeButton}

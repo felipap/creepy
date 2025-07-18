@@ -6,5 +6,6 @@
 - [ ] Support custom locations.
 - [ ] Auth between web and mobile.
 - [ ] See locations on the map.
-- [ ] Get rid of Clerk.
+- [ ] Find a way to protect the web app without fancy auth.
+- [x] Get rid of Clerk.
 - [x] Pull data from Felipe's phone.

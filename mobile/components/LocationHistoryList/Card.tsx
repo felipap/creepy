@@ -1,15 +1,15 @@
 import { Ionicons } from '@expo/vector-icons'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
+import { ApiLocation } from '@/api'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ThemedView } from '@/components/ui/ThemedView'
 import { useMainStore } from '@/state/store'
-import { UserLocation } from '@/state/types'
 import dayjs from 'dayjs'
 import { withBoundary } from '../withBoundary'
 
 interface Props {
-  location: UserLocation
+  location: ApiLocation
   firstSeen?: boolean
 }
 

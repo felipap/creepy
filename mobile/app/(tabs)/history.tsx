@@ -5,15 +5,10 @@ import { ThemedView } from '@/components/ui/ThemedView'
 import { syncAllPendingLocations } from '@/state/sync'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import { useState } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function SyncButton() {
-  const [state, setState] = useState<'idle' | 'loading' | 'success' | 'error'>(
-    'idle',
-  )
-
   function onPressSync() {
     console.log('onPressSync')
     syncAllPendingLocations()
@@ -21,8 +16,7 @@ function SyncButton() {
 
   return (
     <View>
-      <ThemedText>{state}</ThemedText>
-      <Button onPress={onPressSync}>Sync Locations</Button>
+      <Button onPress={onPressSync}>Sync All</Button>
     </View>
   )
 }
@@ -42,13 +36,13 @@ export default function Screen() {
   const { top } = useSafeAreaInsets()
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: top }]}>
+    <ThemedView style={[styles.container, { paddingTop: top + 40 }]}>
       <ThemedView style={styles.titleContainer}>
         <BackButton />
         <ThemedText type="title">Location History</ThemedText>
       </ThemedView>
 
-      <SyncButton />
+      {/* <SyncButton /> */}
 
       <ScrollView style={styles.scrollView}>
         <LocationHistoryList />

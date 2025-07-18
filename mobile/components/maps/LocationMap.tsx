@@ -1,79 +1,38 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ThemedView } from '@/components/ui/ThemedView'
 import * as Location from 'expo-location'
-import React, { useEffect, useMemo, useState } from 'react'
-import { ActivityIndicator, StyleSheet } from 'react-native'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native'
 import MapView from 'react-native-maps'
+import { BeaconMarker } from './BeaconMarker'
+import { HistoryMarkers } from './HistoryMarkers'
 
 interface Props {
   children: React.ReactNode
 }
 
 export const LocationMap = ({ children }: Props) => {
-  const [location, setLocation] = useState<Location.LocationObject | null>(null)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  console.log('LocationMap render')
+  const { location, error, loading } = useCurrentLocation()
+  const mapRef = useRef<MapView>(null)
+  const [zoom, setZoom] = useState(0.4)
 
   useEffect(() => {
-    console.log('LocationMap useEffect()')
-
-    setInterval(() => {
-      load()
-    }, 1000)
-
     async function load() {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync()
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied')
-          setLoading(false)
-          return
+      if (mapRef.current) {
+        const camera = await mapRef.current!.getCamera()
+        if (camera.zoom) {
+          setZoom(camera.zoom)
         }
-
-        let currentLocation = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-        })
-
-        // console.log(
-        // 	'Will set currentLocation',
-        // 	currentLocation.coords.altitude
-        // );
-
-        setLocation(currentLocation)
-      } catch (error) {
-        setErrorMsg(`Error getting location: ${error.message}`)
-      } finally {
-        setLoading(false)
       }
     }
-    load()
-  }, [])
 
-  const { region, initialCamera } = useMemo(() => {
-    if (!location) {
-      return { region: null, initialCamera: null }
-    }
-    return {
-      region: {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      },
-      initialCamera: {
-        zoom: 0.4,
-        altitude: 3000,
-        center: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        },
-        pitch: 0,
-        heading: 0,
-      },
-    }
-  }, [!!location])
+    // mapRef.current!
+
+    load()
+  }, [zoom])
+
+  // Changing region coordinates will reset the camera, so we must memoize this.
+  const firstLocation = useMemo(() => location || null, [!!location])
 
   if (loading) {
     return (
@@ -84,10 +43,10 @@ export const LocationMap = ({ children }: Props) => {
     )
   }
 
-  if (errorMsg) {
+  if (error) {
     return (
       <ThemedView style={styles.container}>
-        <ThemedText style={styles.errorText}>{errorMsg}</ThemedText>
+        <ThemedText style={styles.errorText}>{error}</ThemedText>
       </ThemedView>
     )
   }
@@ -103,18 +62,53 @@ export const LocationMap = ({ children }: Props) => {
   return (
     <ThemedView style={styles.container}>
       <MapView
+        ref={mapRef}
         // showsMyLocationButton={true}
         style={[styles.map, { height: 810 }]}
-        region={region!}
+        region={{
+          latitude: firstLocation!.coords.latitude,
+          longitude: firstLocation!.coords.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+        onRegionChange={(r, d) => {
+          // console.log('onRegionChange', r, d)
+          setZoom(
+            Math.log2(
+              360 * (Dimensions.get('window').width / 256 / r.longitudeDelta),
+            ) + 1,
+          )
+        }}
         // scrollEnabled={false}
         // zoomTapEnabled={false}
         // pitchEnabled={false}
         // rotateEnabled={false}
+        // showsTraffic
+        // showsScale
         // zoomEnabled={false}
-        initialCamera={initialCamera!}
+        // showsMyLocationButton={true}
+
+        // Position compass under the history button.
+        compassOffset={{
+          x: -10,
+          y: 60,
+        }}
+        showsCompass
+        initialCamera={{
+          zoom: 0.4,
+          altitude: 3000,
+          heading: 0,
+          pitch: 0,
+          center: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+        }}
       >
         {/* <NiceMarker coordinate={location.coords} label="Work" /> */}
-        {/* <BeaconMarker coordinate={location.coords} /> */}
+
+        <BeaconMarker coordinate={location.coords} />
+        <HistoryMarkers zoom={zoom} />
 
         {children}
 
@@ -181,3 +175,55 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
+
+function useCurrentLocation() {
+  const [error, setErrorMsg] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [location, setLocation] = useState<Location.LocationObject | null>(null)
+
+  useEffect(() => {
+    // console.log('LocationMap useEffect()')
+
+    setInterval(() => {
+      load()
+    }, 1000)
+
+    async function load() {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync()
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied')
+          setLoading(false)
+          return
+        }
+
+        let currentLocation = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        })
+
+        // console.log(
+        // 	'Will set currentLocation',
+        // 	currentLocation.coords.altitude
+        // );
+
+        setLocation(currentLocation)
+      } catch (error) {
+        setErrorMsg(`Error getting location: ${error.message}`)
+      } finally {
+        setLoading(false)
+      }
+
+      // console.log(
+      //   'LocationMap useEffect()',
+      //   (new Date().getTime() - start.getTime()) / 1000,
+      // )
+    }
+    load()
+  }, [])
+
+  return {
+    location,
+    error,
+    loading,
+  }
+}

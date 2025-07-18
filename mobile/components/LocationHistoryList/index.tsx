@@ -1,18 +1,23 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useMainStore } from '@/state/store'
 import dayjs from 'dayjs'
-import { useEffect, useMemo, useState } from 'react'
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native'
+import { useEffect, useMemo } from 'react'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from 'react-native'
+import { LoadingIndicator } from '../ui/LoadingIndicator'
 import { withBoundary } from '../withBoundary'
 import { LocationCard } from './Card'
+import { useLocationPaginator } from './useLocationPaginator'
 
 export const LocationHistoryList = withBoundary(() => {
-  const { lastSeenHistoryTabAt, locations, setLastSeenHistoryTabAt } =
-    useMainStore()
+  const theme = useColorScheme() ?? 'light'
 
-  // state
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
+  const { loadMore, loading, locations, hasMore } = useLocationPaginator()
+  const { lastSeenHistoryTabAt, setLastSeenHistoryTabAt } = useMainStore()
 
   // Save this so it's not overwritten by our update.
   const savedLastSeenHistoryTabAt = useMemo(() => {
@@ -23,13 +28,13 @@ export const LocationHistoryList = withBoundary(() => {
     setLastSeenHistoryTabAt(new Date().toISOString())
   }, [])
 
-  function handleLoadMore() {}
+  function handleLoadMore() {
+    loadMore()
+  }
 
-  const sortedLocations = locations
-    .sort((a, b) => {
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    })
-    .slice(0, 10)
+  const sortedLocations = locations.sort((a, b) => {
+    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  })
 
   if (locations.length === 0 && !loading) {
     return (
@@ -50,15 +55,24 @@ export const LocationHistoryList = withBoundary(() => {
       ))}
       {hasMore && (
         <TouchableOpacity
-          style={styles.loadMoreButton}
+          style={[
+            styles.loadMoreButton,
+            {
+              backgroundColor: theme === 'light' ? '#f0f0f0' : '#222',
+            },
+          ]}
           onPress={handleLoadMore}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator size="small" />
           ) : (
-            <ThemedText type="defaultSemiBold" style={styles.loadMoreText}>
-              Load More
+            <ThemedText
+              type="defaultSemiBold"
+              style={styles.loadMoreText}
+              disabled={loading || !hasMore}
+            >
+              {loading ? <LoadingIndicator size="small" /> : 'Load More'}
             </ThemedText>
           )}
         </TouchableOpacity>

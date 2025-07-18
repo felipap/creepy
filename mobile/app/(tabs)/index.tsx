@@ -1,27 +1,10 @@
 import { LocationMap } from '@/components/maps/LocationMap'
 import { OpenHistoryButton } from '@/components/OpenHistoryButton'
 import { TrackPillButton } from '@/components/TrackPillButton'
-import { useMainStore } from '@/state/store'
 import { router } from 'expo-router'
-import { useMemo } from 'react'
 import { View } from 'react-native'
 
 export default function Screen() {
-  const { locations } = useMainStore()
-
-  const latestLocations = useMemo(() => {
-    return [...locations]
-      .sort((a, b) => {
-        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      })
-      .slice(0, 20)
-      .map((l) => ({
-        ...l,
-        longitude: l.longitude,
-        latitude: l.latitude,
-      }))
-  }, [locations])
-
   return (
     <>
       <LocationMap>
@@ -36,7 +19,6 @@ export default function Screen() {
 						// speed: -1,
 					}}
 				/> */}
-        {/* <HistoryMarkers locations={latestLocations} /> */}
         <View
           style={{
             position: 'absolute',

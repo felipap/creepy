@@ -55,6 +55,7 @@ async function syncLocationChunk(
 		body: JSON.stringify({
 			locations: chunk.map((l) => ({
 				uniqueId: l.id,
+				timestamp: new Date(l.timestamp).getTime(),
 				latitude: l.latitude,
 				longitude: l.longitude,
 				source: l.source,

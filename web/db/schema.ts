@@ -56,7 +56,7 @@ export const Locations = pgTable(
     uniqueId: text('unique_id').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     uselessField: text('useless_field'),
-    timestamp: timestamp('timestamp').defaultNow().notNull(),
+    timestamp: timestamp('timestamp').notNull(),
     userId: integer('user_id')
       .notNull()
       // .references(() => Users.id)

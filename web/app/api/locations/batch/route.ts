@@ -9,6 +9,7 @@ const PostStruct = z.object({
     .array(
       z.object({
         uniqueId: z.string(),
+        timestamp: z.number(),
         latitude: z.number().min(-90).max(90),
         longitude: z.number().min(-180).max(180),
         source: z.string(),
@@ -44,6 +45,7 @@ export const POST = authMobileRequest(async (request: NextRequest) => {
         uniqueId: l.uniqueId,
         userId: DEFAULT_USER_ID,
         createdAt,
+        timestamp: new Date(l.timestamp),
         latitude: l.latitude.toString(),
         longitude: l.longitude.toString(),
         source: l.source,

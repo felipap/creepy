@@ -13,7 +13,9 @@ npx expo start
 
 https://github.com/expo/expo/issues/17511
 
-## Build deployment version and submit to App Store
+You can use Ngrok to hit your local server from your phone.
+
+## Build deployment version and submit to App Store with Expo
 
 ```bash
 npx expo prebuild

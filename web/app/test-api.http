@@ -1,3 +1,5 @@
+### Create a location
+
 POST http://localhost:3000/api/locations
 Content-Type: application/json
 X-Tracker-Password: {{$dotenv PASSWORD}}
@@ -7,4 +9,27 @@ X-Tracker-Password: {{$dotenv PASSWORD}}
   "latitude": 74.23423,
   "longitude": 74.23423,
   "source": "yo-mama"
+}
+
+### Create a batch of locations
+
+POST http://localhost:3000/api/locations/batch
+Content-Type: application/json
+X-Tracker-Password: {{$dotenv PASSWORD}}
+
+{
+  "locations": [
+    {
+      "uniqueId": "123123",
+      "latitude": 74.23423,
+      "longitude": 74.23423,
+      "source": "yo-mama"
+    },
+    {
+      "uniqueId": "broobrobor",
+      "latitude": 74.23423,
+      "longitude": 74.23423,
+      "source": "yo-mama"
+    }
+  ]
 }

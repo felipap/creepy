@@ -3,9 +3,10 @@ import { useMainStore } from '@/state/store';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import { withBoundary } from '../withBoundary';
 import { LocationCard } from './Card';
 
-export function LocationHistoryList() {
+export const LocationHistoryList = withBoundary(() => {
 	const { lastSeenHistoryTabAt, locations, setLastSeenHistoryTabAt } =
 		useMainStore();
 
@@ -62,7 +63,7 @@ export function LocationHistoryList() {
 			)}
 		</>
 	);
-}
+});
 
 const styles = StyleSheet.create({
 	container: {

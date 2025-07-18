@@ -4,7 +4,7 @@ import { desc, eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 
-function authMobileRequest(
+export function authMobileRequest(
   handler: (request: NextRequest) => Promise<Response>,
 ) {
   return async (request: NextRequest) => {
@@ -35,12 +35,14 @@ export const GET = authMobileRequest(async (request: NextRequest) => {
   )
 })
 
-const PostStruct = z.object({
+export const CreateLocationStruct = z.object({
   uniqueId: z.string(),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
   source: z.string(),
 })
+
+const PostStruct = CreateLocationStruct
 
 export const POST = authMobileRequest(async (request: NextRequest) => {
   console.log('POST /locations')
@@ -50,38 +52,32 @@ export const POST = authMobileRequest(async (request: NextRequest) => {
   const parsed = PostStruct.safeParse(json)
   if (!parsed.success) {
     console.warn('Invalid request body', { error: parsed.error })
-    return new Response(JSON.stringify({ error: parsed.error }), {
-      status: 400,
-    })
+    return Response.json({ error: parsed.error }, { status: 400 })
   }
 
-  const loc = await db
+  const [loc] = await db
     .insert(Locations)
     .values({
-      // userId: user.id,
+      userId: DEFAULT_USER_ID,
       uniqueId: parsed.data.uniqueId,
       latitude: '' + parsed.data.latitude,
       longitude: '' + parsed.data.longitude,
       source: parsed.data.source,
     })
     .returning()
-    .onConflictDoNothing({
-      target: [Locations.uniqueId, Locations.userId],
-    })
+    .onConflictDoNothing()
 
-  const hasConflict = !loc
-  if (hasConflict) {
-    console.log('Conflict detected, skipping.')
-    return new Response(JSON.stringify({ error: 'Location already exists' }), {
-      status: 409,
-    })
+  if (!loc) {
+    console.log(`Location ${parsed.data.uniqueId} already exists, skipping.`)
+    return Response.json(
+      { error: 'Location already exists' },
+      {
+        status: 409,
+      },
+    )
   }
 
-  console.log('Inserted location', loc)
+  console.info('Inserted 	location', loc)
 
-  return new Response(
-    JSON.stringify({
-      message: 'Hello, world!',
-    }),
-  )
+  return Response.json({ location: loc })
 })

@@ -1,12 +1,12 @@
 import { createId } from '@paralleldrive/cuid2'
 import { InferSelectModel } from 'drizzle-orm'
 import {
-  index,
   integer,
   pgTable,
   serial,
   text,
   timestamp,
+  unique,
 } from 'drizzle-orm/pg-core'
 
 export const DEFAULT_USER_ID = 1
@@ -52,8 +52,7 @@ export const Locations = pgTable(
     id: text('id')
       .primaryKey()
       .$defaultFn(() => createId()),
-    // A unique ID on the app side. Used for deduplication. FIXME better name
-    // for this.
+    // A unique ID on the app side. Used for deduplication. FIXME rename
     uniqueId: text('unique_id').notNull(),
     timestamp: timestamp('timestamp').defaultNow().notNull(),
     userId: integer('user_id')
@@ -71,7 +70,7 @@ export const Locations = pgTable(
     // We'll allow this to be null while the information isn't available.
     locationInfoId: text('location_info_id').references(() => LocationInfo.id),
   },
-  table => [index('unique_id_user_id_idx').on(table.uniqueId, table.userId)],
+  table => [unique('unique_id_user_id_idx').on(table.uniqueId, table.userId)],
 )
 
 export type Location = InferSelectModel<typeof Locations>

@@ -8,6 +8,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 felipe-locations.json
+location-labels.ts
 tsconfig.tsbuildinfo
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

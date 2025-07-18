@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-// Find theme from media query
 export function useTheme() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
 

@@ -1,35 +1,85 @@
-### Create a location
+### Test MCP Server
 
-POST http://localhost:3000/api/locations
+### Initialize the MCP server
+POST http://localhost:3000/api/mcp
 Content-Type: application/json
-X-Tracker-Secret: {{$dotenv MOBILE_REQUEST_SECRET}}
+x-tracker-secret: your-secret-here
 
 {
-  "uniqueId": "123",
-  "latitude": 74.23423,
-  "longitude": 74.23423,
-  "source": "yo-mama"
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "initialize",
+  "params": {}
 }
 
-### Create a batch of locations
-
-POST http://localhost:3000/api/locations/batch
+### List available tools
+POST http://localhost:3000/api/mcp
 Content-Type: application/json
-X-Tracker-Secret: {{$dotenv MOBILE_REQUEST_SECRET}}
+x-tracker-secret: your-secret-here
 
 {
-  "locations": [
-    {
-      "uniqueId": "123123",
-      "latitude": 74.23423,
-      "longitude": 74.23423,
-      "source": "yo-mama"
-    },
-    {
-      "uniqueId": "broobrobor",
-      "latitude": 74.23423,
-      "longitude": 74.23423,
-      "source": "yo-mama"
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/list",
+  "params": {}
+}
+
+### Get locations (last 50)
+POST http://localhost:3000/api/mcp
+Content-Type: application/json
+x-tracker-secret: your-secret-here
+
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "tools/call",
+  "params": {
+    "name": "get_locations",
+    "arguments": {
+      "limit": 10
     }
-  ]
+  }
+}
+
+### Get location statistics (last 30 days)
+POST http://localhost:3000/api/mcp
+Content-Type: application/json
+x-tracker-secret: your-secret-here
+
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "method": "tools/call",
+  "params": {
+    "name": "get_location_stats",
+    "arguments": {
+      "days": 30
+    }
+  }
+}
+
+### List available resources
+POST http://localhost:3000/api/mcp
+Content-Type: application/json
+x-tracker-secret: your-secret-here
+
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "method": "resources/list",
+  "params": {}
+}
+
+### Read a specific location resource (replace location-id with actual ID)
+POST http://localhost:3000/api/mcp
+Content-Type: application/json
+x-tracker-secret: your-secret-here
+
+{
+  "jsonrpc": "2.0",
+  "id": 6,
+  "method": "resources/read",
+  "params": {
+    "uri": "location://location-id-here"
+  }
 }

@@ -1,9 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from 'react-native'
 import { useLocationTrackingContext } from '../TrackerProvider'
 
 export function TrackPillButton() {
   const { isTracking, startTracking, stopTracking } =
     useLocationTrackingContext()
+  const theme = useColorScheme()
 
   const onPress = () => {
     if (isTracking) {
@@ -18,11 +25,22 @@ export function TrackPillButton() {
       <View
         style={[
           styles.container,
-          { backgroundColor: isTracking ? '#007AFF' : '#000' },
+          {
+            backgroundColor: isTracking
+              ? theme === 'light'
+                ? '#007AFF'
+                : '#B4E3FF'
+              : '#000',
+          },
         ]}
       >
         {/* {icon} */}
-        <Text style={styles.title}>
+        <Text
+          style={[
+            styles.title,
+            { color: theme === 'light' ? 'white' : 'black' },
+          ]}
+        >
           {isTracking ? 'Tracking ON' : 'Beacon OFF'}
         </Text>
       </View>
@@ -50,6 +68,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: 'white',
   },
 })

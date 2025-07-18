@@ -27,7 +27,7 @@ export const HistoryMarkers = withBoundary(({ zoom }: Props) => {
   // by trial and error. Performance is not pretty... clustering would be
   // better.
   const dim = useMemo(() => {
-    return 1600000 / Math.pow(2, zoom || 14)
+    return 900_000 / Math.pow(2, zoom || 14)
   }, [zoom])
 
   return (
@@ -46,31 +46,32 @@ export const HistoryMarkers = withBoundary(({ zoom }: Props) => {
           strokeColor="transparent"
           fillColor={
             theme === 'light'
-              ? `rgba(122, 122, 255, ${0.3 + 0.6 * (index / locations.length)})`
-              : `rgba(122, 255, 122, ${0.3 + 0.6 * (index / locations.length)})`
+              ? `rgba(122, 122, 255, ${0.6 + 0.6 * (index / locations.length)})`
+              : `rgba(255, 255, 112, ${0.6 + 0.6 * (index / locations.length)})`
           }
           style={{ opacity: 0.5 }}
           zIndex={1}
         />
       ))}
 
-      {FELIPE_PLACES.map((place) => (
-        <Marker
-          coordinate={place.coords}
-          zIndex={0}
-          key={place.label}
-          centerOffset={{
-            x: 0,
-            y: 20,
-          }}
-          tracksViewChanges={false}
-          title={place.label}
-        >
-          {/* <View style={styles.bubble}>
+      {false &&
+        FELIPE_PLACES.map((place) => (
+          <Marker
+            coordinate={place.coords}
+            zIndex={0}
+            key={place.label}
+            centerOffset={{
+              x: 0,
+              y: 20,
+            }}
+            tracksViewChanges={false}
+            title={place.label}
+          >
+            {/* <View style={styles.bubble}>
             <Text style={{ color: 'white' }}>{place.label}</Text>
           </View> */}
-        </Marker>
-      ))}
+          </Marker>
+        ))}
     </>
   )
 })

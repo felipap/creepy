@@ -5,9 +5,10 @@
 - [ ] Web: MCP.
 - [ ] Document how to configure for self-use.
 - [ ] Support custom labels for locations.
-- [ ] Web: see locations on the map.
 - [ ] Mobile: Beacon animation.
-- [ ] Mobile: Allow me to navigate around the map freely.
+- [ ] docs: improve README according to other good readmes.
+- [x] Web: see locations on the map.
+- [x] Mobile: Allow me to navigate around the map freely.
 - [x] Mobile: sync proactively.
 - [x] Auth between web and mobile.
 - [x] Find a way to protect the web app without fancy auth.

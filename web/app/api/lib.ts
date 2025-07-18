@@ -32,5 +32,7 @@ export function authMcpRequest(
       console.debug('Unauthorized', secret)
       return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    return handler(request)
   }
 }

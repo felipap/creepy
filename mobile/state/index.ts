@@ -26,7 +26,7 @@ export async function trySaveLocationToLocalStorage(
   source: 'background' | 'button' | 'foreground',
 ): Promise<UserLocation | null> {
   const label = getLocationLabel(input.latitude, input.longitude)
-  const id = String(Math.floor(Math.random() * 1000000))
+  const id = String(Math.floor(Math.random() * 10000000000))
 
   const loc: UserLocation = {
     uniqueId: id,

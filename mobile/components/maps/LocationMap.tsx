@@ -74,7 +74,7 @@ export const LocationMap = ({ children }: Props) => {
             ) + 1,
           )
         }}
-        // scrollEnabled={false}
+        // scrollEnabled={false}z
         // zoomTapEnabled={false}
         // pitchEnabled={false}
         // rotateEnabled={false}
@@ -91,7 +91,7 @@ export const LocationMap = ({ children }: Props) => {
         showsCompass
         initialCamera={{
           zoom: 0.4,
-          altitude: 3000,
+          altitude: 18_000,
           heading: 0,
           pitch: 0,
           center: {

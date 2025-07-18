@@ -1,11 +1,12 @@
 import { debug, error, log, logError } from '@/lib/logger'
-import { STORAGE_KEYS, writeLocalStorage } from '@/state'
-import { mainStore } from '@/state/store'
-import { UserLocation } from '@/state/types'
+import {
+  STORAGE_KEYS,
+  trySaveLocationToLocalStorage,
+  writeLocalStorage,
+} from '@/state'
 import * as ExpoLocation from 'expo-location'
 import * as TaskManager from 'expo-task-manager'
 import { syncLocation } from '../api'
-import { getLocationLabel } from './location-labels'
 
 const MIN_TIME_LOCATION_TRACKING_INTERVAL = 20_000
 const TASK_NAME = 'location-tracking'
@@ -34,13 +35,19 @@ TaskManager.defineTask(TASK_NAME, async ({ data, error: taskError }) => {
       const location = locations[0]
       if (location) {
         const userLocation = await trySaveLocationToLocalStorage(
-          location,
+          {
+            timestamp: new Date(),
+            accuracy: location.coords.accuracy,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
           'background',
         )
+
         if (userLocation) {
           await syncLocation(userLocation)
+          await writeLocalStorage(STORAGE_KEYS.LAST_SENT, new Date())
         }
-        await writeLocalStorage(STORAGE_KEYS.LAST_SENT, new Date())
       }
     }
   } catch (e) {
@@ -100,11 +107,20 @@ export class LocationTrackingTask {
           // 	return;
           // }
 
-          console.log('location', location)
-
-          await trySaveLocationToLocalStorage(location, 'foreground')
-          await syncLocation(location, 'foreground')
-          await writeLocalStorage(STORAGE_KEYS.LAST_SENT, new Date())
+          console.log('[LOCATION] location', location)
+          const loc = await trySaveLocationToLocalStorage(
+            {
+              timestamp: new Date(),
+              accuracy: location.coords.accuracy,
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            },
+            'foreground',
+          )
+          if (loc) {
+            await syncLocation(loc)
+            await writeLocalStorage(STORAGE_KEYS.LAST_SENT, new Date())
+          }
         },
       )
 
@@ -127,36 +143,5 @@ export class LocationTrackingTask {
       logError('[LOCATION] Error stopping location tracking:', e)
       throw e
     }
-  }
-}
-
-export async function trySaveLocationToLocalStorage(
-  location: ExpoLocation.LocationObject,
-  source: 'background' | 'button' | 'foreground',
-): Promise<UserLocation | null> {
-  const label = getLocationLabel(location.coords)
-
-  try {
-    const id = String(Math.floor(Math.random() * 1000000))
-
-    const loc: UserLocation = {
-      uniqueId: id,
-      uniqueId: id,
-      timestamp: new Date().toISOString(),
-      accuracy: location.coords.accuracy,
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      source,
-      label,
-      // Will be filled after sync.
-      remoteId: null,
-      remoteSyncedAt: null,
-    }
-    mainStore.getState().addLocation(loc)
-    console.log('Location saved to local storage')
-    return loc
-  } catch (e) {
-    logError('[LOCATION] Error adding location:', e)
-    return null
   }
 }

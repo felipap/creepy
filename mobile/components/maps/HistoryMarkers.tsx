@@ -1,7 +1,7 @@
 // https://www.youtube.com/watch?v=-6tywZ7OFRo
 
+import { FELIPE_PLACES } from '@/lib/location-labels'
 import { UserLocation } from '@/state/types'
-import { FELIPE_PLACES } from '@/tasks/location-labels'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Circle, Marker } from 'react-native-maps'

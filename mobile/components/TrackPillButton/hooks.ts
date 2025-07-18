@@ -1,16 +1,6 @@
-import { fetchActivities } from '@/api';
-import { useMainStore } from '@/state/store';
-import { useQuery } from '@tanstack/react-query';
+import { useMainStore } from '@/state/store'
 
 export function useIsTracking() {
-	const { isTracking, setIsTracking } = useMainStore();
-	return { isTracking, setIsTracking };
-}
-
-export function useAllActivities() {
-	return useQuery({
-		queryKey: ['activities'],
-		queryFn: () => fetchActivities(),
-		// subscribed: isFocused,
-	});
+  const { isTracking, setIsTracking } = useMainStore()
+  return { isTracking, setIsTracking }
 }

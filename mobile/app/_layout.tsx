@@ -1,18 +1,21 @@
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import 'react-native-reanimated';
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import 'react-native-reanimated'
 
-import { DarkTheme, Theme, ThemeProvider } from '@react-navigation/native';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { DarkTheme, Theme, ThemeProvider } from '@react-navigation/native'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useFonts } from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
+import { StatusBar } from 'expo-status-bar'
+import { useEffect } from 'react'
 // import Toast from 'react-native-toast-message';
 // import * as Sentry from '@sentry/react-native';
-import { StoreContextProvider } from '@/state/store';
-import { Slot } from 'expo-router';
-import { Text, TextInput, useColorScheme } from 'react-native';
-import { TrackerProvider } from '../components/TrackerProvider';
+import { StoreContextProvider } from '@/state/store'
+import { startSyncLogic } from '@/state/sync'
+import { Slot } from 'expo-router'
+import { Text, TextInput, useColorScheme } from 'react-native'
+import { TrackerProvider } from '../components/TrackerProvider'
+
+void startSyncLogic()
 
 // Sentry.init({
 // 	dsn: 'https://7feaac26b851c1613ca382fd1afa4f64@o175888.ingest.us.sentry.io/4509025209810944',
@@ -22,67 +25,67 @@ import { TrackerProvider } from '../components/TrackerProvider';
 // });
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 // @ts-ignore
-Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps = Text.defaultProps || {}
 // @ts-ignore
-Text.defaultProps.allowFontScaling = false;
+Text.defaultProps.allowFontScaling = false
 // @ts-ignore
-TextInput.defaultProps = TextInput.defaultProps || {};
+TextInput.defaultProps = TextInput.defaultProps || {}
 // @ts-ignore
-TextInput.defaultProps.allowFontScaling = false;
+TextInput.defaultProps.allowFontScaling = false
 
 // export default Sentry.wrap(function RootLayout() {
 export default function RootLayout() {
-	const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme()
 
-	const [loaded] = useFonts({
-		SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-	});
+  const [loaded] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  })
 
-	useEffect(() => {
-		if (loaded) {
-			SplashScreen.hideAsync();
-		}
-	}, [loaded]);
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync()
+    }
+  }, [loaded])
 
-	if (!loaded) {
-		return null;
-	}
+  if (!loaded) {
+    return null
+  }
 
-	const queryClient = new QueryClient({
-		defaultOptions: { queries: { retry: 2 } },
-	});
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: 2 } },
+  })
 
-	return (
-		<GestureHandlerRootView style={{ flex: 1 }}>
-			<StoreContextProvider>
-				<QueryClientProvider client={queryClient}>
-					<ThemeProvider
-						value={colorScheme === 'dark' ? DarkTheme : LightTheme}
-					>
-						<TrackerProvider>
-							<StatusBar style="auto" />
-							<Slot />
-							{/* <Toast /> */}
-						</TrackerProvider>
-					</ThemeProvider>
-				</QueryClientProvider>
-			</StoreContextProvider>
-		</GestureHandlerRootView>
-	);
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <StoreContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider
+            value={colorScheme === 'dark' ? DarkTheme : LightTheme}
+          >
+            <TrackerProvider>
+              <StatusBar style="auto" />
+              <Slot />
+              {/* <Toast /> */}
+            </TrackerProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </StoreContextProvider>
+    </GestureHandlerRootView>
+  )
 }
 
 export const LightTheme: Theme = {
-	dark: false,
-	colors: {
-		primary: 'rgb(0, 122, 255)',
-		background: 'rgb(255, 255, 255)',
-		card: 'rgb(255, 255, 255)',
-		text: 'rgb(28, 28, 30)',
-		border: 'rgb(216, 216, 216)',
-		notification: 'rgb(255, 59, 48)',
-	},
-	fonts: DarkTheme.fonts,
-};
+  dark: false,
+  colors: {
+    primary: 'rgb(0, 122, 255)',
+    background: 'rgb(255, 255, 255)',
+    card: 'rgb(255, 255, 255)',
+    text: 'rgb(28, 28, 30)',
+    border: 'rgb(216, 216, 216)',
+    notification: 'rgb(255, 59, 48)',
+  },
+  fonts: DarkTheme.fonts,
+}

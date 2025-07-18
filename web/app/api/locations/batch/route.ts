@@ -23,7 +23,7 @@ const PostStruct = z.object({
  * their IDs.
  */
 export const POST = authMobileRequest(async (request: NextRequest) => {
-  console.log('POST /locations/batch')
+  console.log('POST /api/locations/batch')
 
   const json = await request.json()
 

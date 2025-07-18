@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { authMobileRequest } from '../lib'
 
 export const GET = authMobileRequest(async (request: NextRequest) => {
-  console.log('GET /locations')
+  console.log('GET /api/locations')
 
   const page = request.nextUrl.searchParams.get('page') || '0'
   const limit = request.nextUrl.searchParams.get('limit') || '20'
@@ -36,7 +36,7 @@ const PostStruct = z.object({
 })
 
 export const POST = authMobileRequest(async (request: NextRequest) => {
-  console.log('POST /locations')
+  console.log('POST /api/locations')
 
   const json = await request.json()
 

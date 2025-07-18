@@ -1,6 +1,7 @@
 'use client'
 
 import { Location } from '@/db/schema'
+import { useTheme } from '@/ui/useTheme'
 import { withBoundary } from '@/ui/withBoundary'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -22,6 +23,8 @@ interface Props {
 }
 
 export const LocationMap = withBoundary(({ locations }: Props) => {
+  const theme = useTheme()
+
   const mapWrapperRef = useRef<HTMLDivElement>(null)
   const { height } = useRefSize(mapWrapperRef)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -126,7 +129,11 @@ export const LocationMap = withBoundary(({ locations }: Props) => {
             zoom: 13,
           }}
           style={{ width: '100%', height: height }}
-          mapStyle="mapbox://styles/mapbox/streets-v9"
+          mapStyle={
+            theme === 'dark'
+              ? 'mapbox://styles/mapbox/dark-v11'
+              : 'mapbox://styles/mapbox/streets-v12'
+          }
         >
           {filteredLocations.map((location, index) => {
             const isSelected = selectedDate

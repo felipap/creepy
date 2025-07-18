@@ -10,7 +10,9 @@
     "**/bower_components": true,
     "**/*.code-search": true,
     "**/.expo": true,
+    "**/*.tsbuildinfo": true,
     "**/Pods": true,
+    "**/pnpm-lock.yaml": true,
     "Podfile": true
   }
 }

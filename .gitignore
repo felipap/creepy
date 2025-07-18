@@ -148,3 +148,4 @@ desktop/
 .pnp.*
 
 mobile/android
+.vercel

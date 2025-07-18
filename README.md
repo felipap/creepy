@@ -17,8 +17,8 @@ See README files for each component.
 
 ## Status
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/tracker/lint-mobile.yml?label=mobile)](https://github.com/felipap/tracker/actions)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/tracker/lint-web.yml?label=web&color=blue)](https://github.com/felipap/tracker/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/tracker/lint-mobile.yml?label=Mobile+Build)](https://github.com/felipap/tracker/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/tracker/lint-web.yml?label=Web+Build&color=blue)](https://github.com/felipap/tracker/actions)
 
 ## License
 

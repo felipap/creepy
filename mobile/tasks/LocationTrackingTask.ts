@@ -4,7 +4,7 @@ import { mainStore } from '@/state/store';
 import { UserLocation } from '@/state/types';
 import * as ExpoLocation from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { sendLocationToApi } from '../api';
+import { syncLocation } from '../api';
 import { getLocationLabel } from './location-labels';
 
 const MIN_TIME_LOCATION_TRACKING_INTERVAL = 20_000;
@@ -34,8 +34,14 @@ TaskManager.defineTask(TASK_NAME, async ({ data, error: taskError }) => {
 			const location = locations[0];
 
 			if (location) {
-				await trySaveLocationToLocalStorage(location, 'background');
-				await sendLocationToApi(location, 'background');
+				const userLocation = await trySaveLocationToLocalStorage(
+					location,
+					'background'
+				);
+				if (userLocation) {
+					console.log('[LocationTrackingTask] Syncing location', userLocation);
+					await syncLocation(userLocation);
+				}
 				await writeLocalStorage(STORAGE_KEYS.LAST_SENT, new Date());
 			}
 		}
@@ -99,7 +105,7 @@ export class LocationTrackingTask {
 					console.log('location', location);
 
 					await trySaveLocationToLocalStorage(location, 'foreground');
-					await sendLocationToApi(location, 'foreground');
+					await syncLocation(location, 'foreground');
 					await writeLocalStorage(STORAGE_KEYS.LAST_SENT, new Date());
 				}
 			);
@@ -129,21 +135,30 @@ export class LocationTrackingTask {
 export async function trySaveLocationToLocalStorage(
 	location: ExpoLocation.LocationObject,
 	source: 'background' | 'button' | 'foreground'
-) {
+): Promise<UserLocation | null> {
 	const label = getLocationLabel(location.coords);
 
 	try {
+		const id = String(Math.floor(Math.random() * 1000000));
+
 		const loc: UserLocation = {
-			id: String(Math.floor(Math.random() * 1000000)),
+			id,
+			uniqueId: id,
 			timestamp: new Date().toISOString(),
+			accuracy: location.coords.accuracy,
 			latitude: location.coords.latitude,
 			longitude: location.coords.longitude,
 			source,
 			label,
+			// Will be filled after sync.
+			remoteId: null,
+			remoteSyncedAt: null,
 		};
 		mainStore.getState().addLocation(loc);
 		console.log('Location saved to local storage');
+		return loc;
 	} catch (e) {
 		logError('[LOCATION] Error adding location:', e);
+		return null;
 	}
 }

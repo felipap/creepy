@@ -21,10 +21,15 @@ export function TrackPillButton() {
 	);
 	return (
 		<TouchableOpacity onPress={onPress}>
-			<View style={styles.container}>
-				{icon}
+			<View
+				style={[
+					styles.container,
+					{ backgroundColor: isTracking ? '#007AFF' : '#000' },
+				]}
+			>
+				{/* {icon} */}
 				<Text style={styles.title}>
-					{isTracking ? 'Tracking on' : 'Tracking off'}
+					{isTracking ? 'Beacon ON' : 'Beacon OFF'}
 				</Text>
 			</View>
 		</TouchableOpacity>
@@ -51,6 +56,6 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 18,
 		fontWeight: 'bold',
-		color: '#333',
+		color: '#fff',
 	},
 });

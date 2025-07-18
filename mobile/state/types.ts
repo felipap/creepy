@@ -1,13 +1,15 @@
 export type UserLocation = {
 	id: string;
+	uniqueId: string;
 	timestamp: string;
 	latitude: number;
 	longitude: number;
 	source: 'background' | 'button' | 'foreground' | null;
+	accuracy: number | null;
 	label: string | null;
 	// When set, the location was synced to the server.
-	remoteId?: string | null;
-	remoteSyncedAt?: string | null;
+	remoteId: string | null;
+	remoteSyncedAt: string | null;
 };
 
 export type State = {

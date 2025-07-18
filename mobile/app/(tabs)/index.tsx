@@ -20,8 +20,8 @@ export default function Screen() {
 			.slice(0, 20)
 			.map((l) => ({
 				...l,
-				longitude: l.longitude, // + (Math.random() - 0.5) * 0.005,
-				latitude: l.latitude, // + (Math.random() - 0.5) * 0.005,
+				longitude: l.longitude,
+				latitude: l.latitude,
 			}));
 	}, [locations]);
 
@@ -40,7 +40,6 @@ export default function Screen() {
 					}}
 				/> */}
 				<HistoryMarkers locations={latestLocations} />
-
 				<View
 					style={{
 						position: 'absolute',

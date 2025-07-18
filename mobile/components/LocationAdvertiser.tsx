@@ -9,7 +9,7 @@ import {
 	Text,
 	View,
 } from 'react-native';
-import { sendLocationToApi } from '../api';
+import { syncLocation } from '../api';
 import { useTrackerState } from './TrackerProvider';
 
 // const checkIsEmulator = async () => {
@@ -55,7 +55,7 @@ export const LocationAdvertiser = () => {
 				onPress={async () => {
 					const loc = await Location.getCurrentPositionAsync();
 					await trySaveLocationToLocalStorage(loc, 'button');
-					sendLocationToApi(loc, 'button');
+					syncLocation(loc, 'button');
 				}}
 			/>
 		</View>

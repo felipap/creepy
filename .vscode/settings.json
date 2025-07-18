@@ -4,5 +4,11 @@
     "source.sortMembers": "explicit"
     // This leads to very annoying deletion of unreachable code on save.
     // "source.fixAll": "explicit",
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "Podfile": true
   }
 }

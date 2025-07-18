@@ -26,9 +26,11 @@ eas submit -p ios --latest
 
 ## Troubleshooting
 
-"In debug, the app can't find or connect to the development server loading on my computer."
+### In debug, the app can't find or connect to the development server loading on my computer
 
-This may depend on the network situation. I found that I had to pull the phone camera and use the QR code to connect. And once that happened the app would reliably find the development server.
+This may depend on the network situation. I found that I had to pull the phone
+camera and use the QR code to connect. And once that happened the app would
+reliably find the development server.
 
 Also make sure you're logged in to the Expo in the development-mode iOS app.
 

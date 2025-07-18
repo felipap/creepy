@@ -64,7 +64,7 @@ export const useLocalStorage = <T extends JsonValue>(
 			const value =
 				typeof valueOrFunction === 'function'
 					? // @ts-ignore
-					  valueOrFunction(localValue)
+						valueOrFunction(localValue)
 					: valueOrFunction;
 			setLocalValue(value);
 			sharedState.set(key, value);

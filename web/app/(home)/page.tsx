@@ -30,7 +30,7 @@ export default async function Page() {
       <main className="flex-1 h-full bg-amber-100 dark:bg-amber-900">
         <div className="flex justify-between items-center p-4">
           <h1 className="text-[17px] font-semibold">
-            Locations ({locations.length})
+            Locations ({Number(locations.length).toLocaleString()})
           </h1>
         </div>
         <Suspense fallback={<div>Loading...</div>}>

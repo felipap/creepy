@@ -10,6 +10,10 @@ An iOS app that tracks your location and an MCP server that exposes it to your A
 
 <img width="300" height="1705" alt="image" src="https://github.com/user-attachments/assets/945854e0-1c1a-4678-aeac-fb013c30e43b" />
 
+<br />
+<br />
+<img width="2437" height="1484" alt="image" src="https://github.com/user-attachments/assets/e3ad77f0-aec2-40e4-b926-345b0c33f8d3" />
+
 ## Structure
 
 This project has two components:

@@ -1,6 +1,16 @@
+<img width="150" height="150" alt="splash-icon" src="https://github.com/user-attachments/assets/348bc769-3325-4de7-9552-8a9fb0330c72" />
+
 # creepy
 
-An AI-native location tracking app.
+A location tracking app for you and your AI.
+
+Track your location using your phone and make it available to AI via an MCP server.
+
+## Demo
+
+(Demo video coming soon.)
+
+<img width="300" height="1705" alt="image" src="https://github.com/user-attachments/assets/945854e0-1c1a-4678-aeac-fb013c30e43b" />
 
 ## Overview
 

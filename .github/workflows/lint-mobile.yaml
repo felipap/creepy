@@ -1,4 +1,4 @@
-name: Lint, type-check and build
+name: 'Mobile: lint and type-check'
 
 on:
   push:

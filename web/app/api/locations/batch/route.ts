@@ -1,8 +1,9 @@
+import { authMobileRequest } from '@/app/api/lib'
 import { db } from '@/db'
 import { DEFAULT_USER_ID, Locations } from '@/db/schema'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
-import { authMobileRequest, CreateLocationStruct } from '../route'
+import { CreateLocationStruct } from '../route'
 
 const PostStruct = z.object({
   locations: z
@@ -42,6 +43,8 @@ export const POST = authMobileRequest(async (request: NextRequest) => {
         source: l.source,
       })),
     )
+    // We need to update in order to get the objects back, because the caller
+    // will need their IDs to consider them synced.
     .onConflictDoUpdate({
       target: [Locations.uniqueId, Locations.userId],
       set: {
@@ -54,7 +57,7 @@ export const POST = authMobileRequest(async (request: NextRequest) => {
     .returning()
 
   const countNewEntries = dbLocations.filter(
-    l => l.createdAt === createdAt,
+    l => l.createdAt.getTime() === createdAt.getTime(),
   ).length
 
   console.log(

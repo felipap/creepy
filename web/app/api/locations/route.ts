@@ -3,15 +3,7 @@ import { DEFAULT_USER_ID, Locations } from '@/db/schema'
 import { desc, eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
-
-export function authMobileRequest(
-  handler: (request: NextRequest) => Promise<Response>,
-) {
-  return async (request: NextRequest) => {
-    // todo
-    return handler(request)
-  }
-}
+import { authMobileRequest } from '../lib'
 
 export const GET = authMobileRequest(async (request: NextRequest) => {
   console.log('GET /locations')
@@ -65,11 +57,8 @@ export const POST = authMobileRequest(async (request: NextRequest) => {
       source: parsed.data.source,
     })
     .returning()
-    // We need to update in order to get the objects back, because the caller
-    // will need their IDs to consider them synced.
-    .onConflictDoUpdate({
+    .onConflictDoNothing({
       target: [Locations.uniqueId, Locations.userId],
-      set: {},
     })
 
   if (!loc) {

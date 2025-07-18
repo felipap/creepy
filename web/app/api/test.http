@@ -2,7 +2,7 @@
 
 POST http://localhost:3000/api/locations
 Content-Type: application/json
-X-Tracker-Password: {{$dotenv PASSWORD}}
+X-Tracker-Secret: {{$dotenv MOBILE_REQUEST_SECRET}}
 
 {
   "uniqueId": "123",
@@ -15,7 +15,7 @@ X-Tracker-Password: {{$dotenv PASSWORD}}
 
 POST http://localhost:3000/api/locations/batch
 Content-Type: application/json
-X-Tracker-Password: {{$dotenv PASSWORD}}
+X-Tracker-Secret: {{$dotenv MOBILE_REQUEST_SECRET}}
 
 {
   "locations": [

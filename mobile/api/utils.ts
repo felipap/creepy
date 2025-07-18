@@ -7,6 +7,11 @@ if (!EXPO_PUBLIC_SERVER_URL) {
 	throw new Error('Missing EXPO_PUBLIC_SERVER_URL');
 }
 
+const EXPO_PUBLIC_API_SECRET = process.env.EXPO_PUBLIC_API_SECRET || '';
+if (!EXPO_PUBLIC_API_SECRET) {
+	throw new Error('Missing EXPO_PUBLIC_API_SECRET');
+}
+
 export const API_HOST = __DEV__
 	? 'https://64d25a897d7e.ngrok-free.app'
 	: EXPO_PUBLIC_SERVER_URL; // Endpoint for location data
@@ -51,7 +56,7 @@ export async function fetchAPI(
 		...options,
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`,
+			'X-Tracker-Secret': EXPO_PUBLIC_API_SECRET,
 			...options?.headers,
 		},
 	};

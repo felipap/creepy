@@ -1,3 +1,5 @@
+'use client'
+
 import { Location } from '@/db/schema'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'

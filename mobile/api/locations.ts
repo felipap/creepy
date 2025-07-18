@@ -8,7 +8,7 @@ export async function sendLocationToApi(
 ) {
 	log('sending location to new endpoint');
 
-	const result = await fetchAPI('api/locations', {
+	const res = await fetchAPI('api/locations', {
 		method: 'POST',
 		body: JSON.stringify({
 			latitude: location.coords.latitude,
@@ -19,8 +19,8 @@ export async function sendLocationToApi(
 		}),
 	});
 
-	if (result.error) {
-		logger.error('Failed to send location:', result.error);
+	if ('error' in res) {
+		logger.error('Failed to send location:', res.error);
 		return;
 	}
 
@@ -40,11 +40,11 @@ export async function getHistory(
 	page: number,
 	limit: number
 ): Promise<Location[]> {
-	const result = await fetchAPI(`api/locations?page=${page}&limit=${limit}`);
+	const res = await fetchAPI(`api/locations?page=${page}&limit=${limit}`);
 
-	if (result.error) {
-		throw new Error(result.error);
+	if ('error' in res) {
+		throw new Error(res.error);
 	}
 
-	return result.data.locations;
+	return res.data.locations;
 }

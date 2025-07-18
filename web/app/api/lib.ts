@@ -21,3 +21,16 @@ export function authMobileRequest(
     return handler(request)
   }
 }
+
+export function authMcpRequest(
+  handler: (request: NextRequest) => Promise<Response>,
+) {
+  return async (request: NextRequest) => {
+    const secret = request.headers.get(MOBILE_REQUEST_HEADER)
+
+    if (secret !== MOBILE_REQUEST_SECRET) {
+      console.debug('Unauthorized', secret)
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+  }
+}

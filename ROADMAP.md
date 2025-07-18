@@ -3,7 +3,7 @@
 # v0
 
 - [ ] Document how to configure for self-use.
-- [ ] Support custom locations.
+- [ ] Support custom labels for locations.
 - [ ] App: see locations on the map.
 - [ ] Web: two factor auth?
 - [x] Auth between web and mobile.

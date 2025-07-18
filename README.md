@@ -11,9 +11,19 @@ This project has two components.
 - **web**: a Next.js app that stores user location and hosts an optional
   MCP server for the user to connect to.
 
+## Self-hosting
+
+Location data is very sensitive so this project is designed to be self-hosted.
+
+To self-host the web app, I recommend setting up a Vercel project. Fill up your
+`.env` file and deploy it with the Root Directory set to `web/`.
+
+"Self-hosting" the app means you build your own version of it using Xcode, with
+your own environment variables.
+
 ## Development
 
-See README files for each component.
+See the `README.md` files of the individual components.
 
 ## Status
 

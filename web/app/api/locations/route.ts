@@ -18,7 +18,7 @@ export const GET = authMobileRequest(async (request: NextRequest) => {
     offset: parseInt(page) * parseInt(limit),
   })
 
-  console.log('Found', locations.length, `locations`)
+  console.debug('Found', locations.length, `locations`)
 
   return new Response(
     JSON.stringify({

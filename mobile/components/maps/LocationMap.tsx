@@ -4,7 +4,6 @@ import * as Location from 'expo-location'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native'
 import MapView from 'react-native-maps'
-import { BeaconMarker } from './BeaconMarker'
 import { HistoryMarkers } from './HistoryMarkers'
 
 interface Props {
@@ -25,9 +24,6 @@ export const LocationMap = ({ children }: Props) => {
         }
       }
     }
-
-    // mapRef.current!
-
     load()
   }, [zoom])
 
@@ -63,7 +59,6 @@ export const LocationMap = ({ children }: Props) => {
     <ThemedView style={styles.container}>
       <MapView
         ref={mapRef}
-        // showsMyLocationButton={true}
         style={[styles.map, { height: 810 }]}
         region={{
           latitude: firstLocation!.coords.latitude,
@@ -87,7 +82,7 @@ export const LocationMap = ({ children }: Props) => {
         // showsScale
         // zoomEnabled={false}
         // showsMyLocationButton={true}
-
+        showsUserLocation
         // Position compass under the history button.
         compassOffset={{
           x: -10,
@@ -107,7 +102,7 @@ export const LocationMap = ({ children }: Props) => {
       >
         {/* <NiceMarker coordinate={location.coords} label="Work" /> */}
 
-        <BeaconMarker coordinate={location.coords} />
+        {/* <BeaconMarker coordinate={location.coords} /> */}
         <HistoryMarkers zoom={zoom} />
 
         {children}
@@ -181,49 +176,46 @@ function useCurrentLocation() {
   const [loading, setLoading] = useState(true)
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
 
-  useEffect(() => {
-    // console.log('LocationMap useEffect()')
-
-    setInterval(() => {
-      load()
-    }, 1000)
-
-    async function load() {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync()
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied')
-          setLoading(false)
-          return
-        }
-
-        let currentLocation = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-        })
-
-        // console.log(
-        // 	'Will set currentLocation',
-        // 	currentLocation.coords.altitude
-        // );
-
-        setLocation(currentLocation)
-      } catch (error) {
-        setErrorMsg(`Error getting location: ${error.message}`)
-      } finally {
+  callEvery(1000, async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied')
         setLoading(false)
+        return
       }
 
+      let currentLocation = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      })
+
       // console.log(
-      //   'LocationMap useEffect()',
-      //   (new Date().getTime() - start.getTime()) / 1000,
-      // )
+      // 	'Will set currentLocation',
+      // 	currentLocation.coords.altitude
+      // );
+
+      setLocation(currentLocation)
+    } catch (error) {
+      setErrorMsg(`Error getting location: ${error.message}`)
+    } finally {
+      setLoading(false)
     }
-    load()
-  }, [])
+
+    // console.log(
+    //   'LocationMap useEffect()',
+    //   (new Date().getTime() - start.getTime()) / 1000,
+    // )
+  })
 
   return {
     location,
     error,
     loading,
   }
+}
+
+// Beware: fn() closure will not be updated.
+function callEvery(ms: number, fn: () => void) {
+  const interval = setInterval(fn, ms)
+  return () => clearInterval(interval)
 }

@@ -1,4 +1,4 @@
-# tracker/web
+# creepy/web
 
 A server that collects tracking locations from the mobile app.
 

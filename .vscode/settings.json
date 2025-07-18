@@ -9,6 +9,7 @@
     "**/node_modules": true,
     "**/bower_components": true,
     "**/*.code-search": true,
+    "**/Pods": true,
     "Podfile": true
   }
 }

@@ -9,6 +9,7 @@ import * as TaskManager from 'expo-task-manager'
 import { syncLocation } from '../api'
 
 const MIN_TIME_LOCATION_TRACKING_INTERVAL = 20_000
+
 const TASK_NAME = 'location-tracking'
 
 // Register the background task

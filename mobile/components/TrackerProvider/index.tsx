@@ -1,4 +1,4 @@
-import '../../tasks/LocationTrackingTask'; // define the background task first.
+import '../../tasks/location' // define the background task first.
 
-export * from './hook';
-export * from './Provider';
+export * from './hook'
+export * from './Provider'

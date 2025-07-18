@@ -1,4 +1,4 @@
-# tracker/mobile
+# creepy/mobile
 
 A mobile app that broadcasts the users' location to the server.
 

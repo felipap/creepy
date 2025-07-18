@@ -1,4 +1,3 @@
-import { HistoryMarkers } from '@/components/maps/HistoryMarkers'
 import { LocationMap } from '@/components/maps/LocationMap'
 import { OpenHistoryButton } from '@/components/OpenHistoryButton'
 import { TrackPillButton } from '@/components/TrackPillButton'
@@ -37,7 +36,7 @@ export default function Screen() {
 						// speed: -1,
 					}}
 				/> */}
-        <HistoryMarkers locations={latestLocations} />
+        {/* <HistoryMarkers locations={latestLocations} /> */}
         <View
           style={{
             position: 'absolute',

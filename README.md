@@ -1,4 +1,4 @@
-# tracker
+# creepy
 
 An AI-native location tracking app.
 

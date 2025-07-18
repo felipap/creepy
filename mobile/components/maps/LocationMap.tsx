@@ -1,112 +1,124 @@
-import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
-import * as Location from 'expo-location';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
-import MapView from 'react-native-maps';
+import { ThemedText } from '@/components/ui/ThemedText'
+import { ThemedView } from '@/components/ui/ThemedView'
+import * as Location from 'expo-location'
+import React, { useEffect, useMemo, useState } from 'react'
+import { ActivityIndicator, StyleSheet } from 'react-native'
+import MapView from 'react-native-maps'
 
 interface Props {
-	children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const LocationMap = ({ children }: Props) => {
-	const [location, setLocation] = useState<Location.LocationObject | null>(
-		null
-	);
-	const [errorMsg, setErrorMsg] = useState<string | null>(null);
-	const [loading, setLoading] = useState(true);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-	useEffect(() => {
-		setInterval(() => {
-			load();
-		}, 1000);
+  console.log('LocationMap render')
 
-		async function load() {
-			try {
-				let { status } = await Location.requestForegroundPermissionsAsync();
-				if (status !== 'granted') {
-					setErrorMsg('Permission to access location was denied');
-					setLoading(false);
-					return;
-				}
+  useEffect(() => {
+    console.log('LocationMap useEffect()')
 
-				let currentLocation = await Location.getCurrentPositionAsync({
-					accuracy: Location.Accuracy.Balanced,
-				});
+    setInterval(() => {
+      load()
+    }, 1000)
 
-				// console.log(
-				// 	'Will set currentLocation',
-				// 	currentLocation.coords.altitude
-				// );
+    async function load() {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync()
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied')
+          setLoading(false)
+          return
+        }
 
-				setLocation(currentLocation);
-			} catch (error) {
-				setErrorMsg(`Error getting location: ${error.message}`);
-			} finally {
-				setLoading(false);
-			}
-		}
-		load();
-	}, []);
+        let currentLocation = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        })
 
-	if (loading) {
-		return (
-			<ThemedView style={styles.container}>
-				<ActivityIndicator size="large" color="#0000ff" />
-				<ThemedText style={styles.text}>Loading map...</ThemedText>
-			</ThemedView>
-		);
-	}
+        // console.log(
+        // 	'Will set currentLocation',
+        // 	currentLocation.coords.altitude
+        // );
 
-	if (errorMsg) {
-		return (
-			<ThemedView style={styles.container}>
-				<ThemedText style={styles.errorText}>{errorMsg}</ThemedText>
-			</ThemedView>
-		);
-	}
+        setLocation(currentLocation)
+      } catch (error) {
+        setErrorMsg(`Error getting location: ${error.message}`)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
 
-	if (!location) {
-		return (
-			<ThemedView style={styles.container}>
-				<ThemedText style={styles.text}>Unable to get location</ThemedText>
-			</ThemedView>
-		);
-	}
+  const { region, initialCamera } = useMemo(() => {
+    if (!location) {
+      return { region: null, initialCamera: null }
+    }
+    return {
+      region: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      },
+      initialCamera: {
+        zoom: 0.4,
+        altitude: 3000,
+        center: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+        pitch: 0,
+        heading: 0,
+      },
+    }
+  }, [!!location])
 
-	return (
-		<ThemedView style={styles.container}>
-			<MapView
-				// showsMyLocationButton={true}
-				style={[styles.map, { height: 810 }]}
-				region={{
-					latitude: location.coords.latitude,
-					longitude: location.coords.longitude,
-					latitudeDelta: 0.01,
-					longitudeDelta: 0.01,
-				}}
-				// scrollEnabled={false}
-				// zoomTapEnabled={false}
-				// pitchEnabled={false}
-				// rotateEnabled={false}
-				// zoomEnabled={false}
-				initialCamera={{
-					zoom: 0.4,
-					altitude: 3000,
-					center: {
-						latitude: location.coords.latitude,
-						longitude: location.coords.longitude,
-					},
-					pitch: 0,
-					heading: 0,
-				}}
-			>
-				{/* <NiceMarker coordinate={location.coords} label="Work" /> */}
-				{/* <BeaconMarker coordinate={location.coords} /> */}
+  if (loading) {
+    return (
+      <ThemedView style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <ThemedText style={styles.text}>Loading map...</ThemedText>
+      </ThemedView>
+    )
+  }
 
-				{children}
+  if (errorMsg) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.errorText}>{errorMsg}</ThemedText>
+      </ThemedView>
+    )
+  }
 
-				{/* <Marker
+  if (!location) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.text}>Unable to get location</ThemedText>
+      </ThemedView>
+    )
+  }
+
+  return (
+    <ThemedView style={styles.container}>
+      <MapView
+        // showsMyLocationButton={true}
+        style={[styles.map, { height: 810 }]}
+        region={region!}
+        // scrollEnabled={false}
+        // zoomTapEnabled={false}
+        // pitchEnabled={false}
+        // rotateEnabled={false}
+        // zoomEnabled={false}
+        initialCamera={initialCamera!}
+      >
+        {/* <NiceMarker coordinate={location.coords} label="Work" /> */}
+        {/* <BeaconMarker coordinate={location.coords} /> */}
+
+        {children}
+
+        {/* <Marker
           coordinate={{
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
@@ -120,52 +132,52 @@ export const LocationMap = ({ children }: Props) => {
             </View>
           </Callout>
         </Marker> */}
-			</MapView>
-		</ThemedView>
-	);
-};
+      </MapView>
+    </ThemedView>
+  )
+}
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		// padding: 16,
-		// margin: 10,
-	},
-	map: {
-		width: '100%',
-	},
-	text: {
-		fontSize: 16,
-		textAlign: 'center',
-		marginTop: 10,
-	},
-	errorText: {
-		fontSize: 16,
-		color: 'red',
-		textAlign: 'center',
-	},
-	calloutContainer: {
-		width: 70,
-		height: 30,
-		paddingHorizontal: 10,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: 'rgba(0, 122, 255, 0.9)',
-		borderRadius: 15,
-		shadowColor: '#000',
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
-		elevation: 5,
-	},
-	calloutText: {
-		color: '#FFFFFF',
-		fontWeight: '600',
-		fontSize: 14,
-		textAlign: 'center',
-	},
-});
+  container: {
+    flex: 1,
+    // padding: 16,
+    // margin: 10,
+  },
+  map: {
+    width: '100%',
+  },
+  text: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
+    textAlign: 'center',
+  },
+  calloutContainer: {
+    width: 70,
+    height: 30,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 122, 255, 0.9)',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  calloutText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+})

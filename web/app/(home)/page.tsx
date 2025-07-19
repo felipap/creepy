@@ -1,7 +1,9 @@
 'use server'
 
 import { db } from '@/db'
+import { DEFAULT_USER_ID, Locations } from '@/db/schema'
 import { requireAuth } from '@/lib/auth'
+import { desc, eq } from 'drizzle-orm'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { Item } from './LocationItem'
@@ -26,7 +28,7 @@ export default async function Page() {
       <Suspense fallback={<div>Loading...</div>}>
         <div className="flex flex-col gap-4 p-4  overflow-scroll h-full bg-white dark:bg-black">
           <ul className="list-disc list-inside">
-            {locations.map(location => (
+            {locations.map((location) => (
               <Item key={location.id} location={location} />
             ))}
           </ul>
@@ -37,5 +39,8 @@ export default async function Page() {
 }
 
 async function getLocations() {
-  return await db.query.Locations.findMany()
+  return await db.query.Locations.findMany({
+    where: eq(Locations.userId, DEFAULT_USER_ID),
+    orderBy: [desc(Locations.timestamp)],
+  })
 }

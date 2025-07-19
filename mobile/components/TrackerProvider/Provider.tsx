@@ -24,6 +24,7 @@ export const TrackerProvider = ({
     useState<Location.LocationSubscription | null>(null)
 
   const startTracking = async () => {
+    console.debug('[TrackerProvider] start')
     try {
       const isRunning = await LocationTrackingTask.isActive()
       if (isRunning) {
@@ -49,6 +50,8 @@ export const TrackerProvider = ({
   }
 
   const stopTracking = async () => {
+    console.debug('[TrackerProvider] stop')
+
     try {
       // Clean up location subscription
       if (locationSubscription) {
